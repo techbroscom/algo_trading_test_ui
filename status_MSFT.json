@@ -1,10 +1,10 @@
 {
-  "timestamp": "2025-06-23T16:41:25.606319+00:00",
+  "timestamp": "2025-06-23T16:42:38.420575+00:00",
   "symbol": "MSFT",
   "market_open": true,
-  "current_price": 480.39,
-  "sma_short": 479.70799999999997,
-  "sma_long": 480.328,
+  "current_price": 480.51,
+  "sma_short": 479.93,
+  "sma_long": 480.29799999999994,
   "position": "none",
   "last_action": "none"
 }
