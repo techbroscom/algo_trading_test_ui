@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Alpaca Bot Dashboard</title>
   <style>
     body {
       font-family: sans-serif;
       background: #f0f4f8;
       padding: 20px;
-      color: #222222;
+      color: #222;
     }
     h1 {
       text-align: center;
@@ -36,14 +36,77 @@
     }
     .buy { color: green; }
     .sell { color: red; }
+
+    #chart-wrapper {
+      margin-top: 3rem;
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 400px !important;
+    }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <h1>📊 Alpaca Trading Bot Status</h1>
+
   <div id="dashboard" class="dashboard"></div>
+
+  <div id="chart-wrapper">
+    <h2 style="text-align: center; margin-bottom: 1rem;">Price & SMA Chart</h2>
+    <canvas id="priceChart"></canvas>
+  </div>
 
   <script>
     const STATUS_URL = "https://techbroscom.github.io/algo_trading_test_ui/status.json";
+    let chartData = [];
+
+    const ctx = document.getElementById("priceChart").getContext("2d");
+    const priceChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [
+          {
+            label: 'Price',
+            data: [],
+            borderColor: '#3e95cd',
+            fill: false
+          },
+          {
+            label: 'SMA(5)',
+            data: [],
+            borderColor: '#8e5ea2',
+            fill: false
+          },
+          {
+            label: 'SMA(20)',
+            data: [],
+            borderColor: '#3cba9f',
+            fill: false
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            display: true,
+            title: { display: true, text: 'Time' }
+          },
+          y: {
+            display: true,
+            title: { display: true, text: 'Price ($)' }
+          }
+        }
+      }
+    });
 
     async function fetchStatus() {
       try {
@@ -69,17 +132,33 @@
       container.innerHTML = `
         ${createCard("Symbol", data.symbol)}
         ${createCard("Market Open", data.market_open ? "✅ Yes" : "❌ No")}
-        ${createCard("Current Price", `$${data.current_price.toFixed(2)}`)}
-        ${createCard("SMA(5)", `$${data.sma_short.toFixed(2)}`)}
-        ${createCard("SMA(20)", `$${data.sma_long.toFixed(2)}`)}
+        ${createCard("Current Price", data.current_price ? `$${data.current_price.toFixed(2)}` : "N/A")}
+        ${createCard("SMA(5)", data.sma_short ? `$${data.sma_short.toFixed(2)}` : "N/A")}
+        ${createCard("SMA(20)", data.sma_long ? `$${data.sma_long.toFixed(2)}` : "N/A")}
         ${createCard("Position", data.position)}
         ${createCard("Last Action", data.last_action.toUpperCase(), data.last_action === "buy" ? "buy" : data.last_action === "sell" ? "sell" : "")}
         ${createCard("Last Updated", new Date(data.timestamp).toLocaleString())}
       `;
+
+      const now = new Date(data.timestamp).toLocaleTimeString();
+      chartData.push({
+        time: now,
+        price: data.current_price,
+        sma5: data.sma_short,
+        sma20: data.sma_long
+      });
+
+      if (chartData.length > 30) chartData.shift(); // Keep last 30 points
+
+      priceChart.data.labels = chartData.map(d => d.time);
+      priceChart.data.datasets[0].data = chartData.map(d => d.price);
+      priceChart.data.datasets[1].data = chartData.map(d => d.sma5);
+      priceChart.data.datasets[2].data = chartData.map(d => d.sma20);
+      priceChart.update();
     }
 
     fetchStatus();
-    setInterval(fetchStatus, 30000); // refresh every 30s
+    setInterval(fetchStatus, 30000); // update every 30 seconds
   </script>
 </body>
 </html>
