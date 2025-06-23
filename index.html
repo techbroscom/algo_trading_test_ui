@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alpaca Bot Dashboard</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f0f4f8;
+      padding: 20px;
+      color: #222;
+    }
+    h1 {
+      text-align: center;
+    }
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .label {
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .value {
+      font-size: 1.4rem;
+      margin-top: 4px;
+    }
+    .buy { color: green; }
+    .sell { color: red; }
+  </style>
+</head>
+<body>
+  <h1>📊 Alpaca Trading Bot Status</h1>
+  <div id="dashboard" class="dashboard"></div>
+
+  <script>
+    const STATUS_URL = "https://your-username.github.io/alpaca-bot-dashboard/status.json";
+
+    async function fetchStatus() {
+      try {
+        const res = await fetch(STATUS_URL);
+        const data = await res.json();
+        updateDashboard(data);
+      } catch (error) {
+        console.error("Failed to fetch status:", error);
+      }
+    }
+
+    function createCard(label, value, extraClass = "") {
+      return `
+        <div class="card">
+          <div class="label">${label}</div>
+          <div class="value ${extraClass}">${value}</div>
+        </div>
+      `;
+    }
+
+    function updateDashboard(data) {
+      const container = document.getElementById("dashboard");
+      container.innerHTML = `
+        ${createCard("Symbol", data.symbol)}
+        ${createCard("Market Open", data.market_open ? "✅ Yes" : "❌ No")}
+        ${createCard("Current Price", `$${data.current_price.toFixed(2)}`)}
+        ${createCard("SMA(5)", `$${data.sma_short.toFixed(2)}`)}
+        ${createCard("SMA(20)", `$${data.sma_long.toFixed(2)}`)}
+        ${createCard("Position", data.position)}
+        ${createCard("Last Action", data.last_action.toUpperCase(), data.last_action === "buy" ? "buy" : data.last_action === "sell" ? "sell" : "")}
+        ${createCard("Last Updated", new Date(data.timestamp).toLocaleString())}
+      `;
+    }
+
+    fetchStatus();
+    setInterval(fetchStatus, 30000); // refresh every 30s
+  </script>
+</body>
+</html>
