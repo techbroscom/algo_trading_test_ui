@@ -1,10 +1,10 @@
 {
-  "timestamp": "2025-06-23T17:44:11.195462+00:00",
+  "timestamp": "2025-06-23T17:45:22.984698+00:00",
   "symbol": "TSLA",
   "market_open": true,
-  "current_price": 352.96,
-  "sma_short": 353.358,
-  "sma_long": 351.3673333333333,
+  "current_price": 353.0,
+  "sma_short": 353.41749999999996,
+  "sma_long": 351.48533333333336,
   "position": "long",
   "last_action": "none"
 }
