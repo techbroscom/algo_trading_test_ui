@@ -1,10 +1,10 @@
 {
-  "timestamp": "2025-06-23T16:49:52.027277+00:00",
+  "timestamp": "2025-06-23T16:51:04.689432+00:00",
   "symbol": "AAPL",
   "market_open": true,
-  "current_price": 200.07,
-  "sma_short": 200.284,
-  "sma_long": 199.95350000000002,
+  "current_price": 200.06,
+  "sma_short": 200.17399999999998,
+  "sma_long": 199.954,
   "position": "long",
   "last_action": "none"
 }
