@@ -1,10 +1,10 @@
 {
-  "timestamp": "2025-06-24T14:55:00.359274+00:00",
+  "timestamp": "2025-06-24T14:56:13.944457+00:00",
   "symbol": "GOOG",
   "market_open": true,
-  "current_price": 168.04,
-  "sma_short": 168.09,
-  "sma_long": 168.09516666666667,
-  "position": "long",
-  "last_action": "sell"
+  "current_price": 168.2,
+  "sma_short": 168.06300000000002,
+  "sma_long": 168.09533333333334,
+  "position": "none",
+  "last_action": "none"
 }
